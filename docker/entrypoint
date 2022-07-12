@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# TODO: Sniff out and change PHP-FPM version in Nginx, Supervisord conf
+# TODO: Install/set node version
+
+if [ $# -gt 0 ];then
+    # If we passed a command, run it as current user
+    exec gosu vessel "$@"
+else
+    # Otherwise start our service
+    exec /app/vessel-run
+fi

@@ -9,14 +9,23 @@ use procfs::net::TcpState;
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
-    let status = Command::new("service")
+    let super_status = Command::new("service")
+        .arg("supervisor")
+        .arg("start")
+        .stdin(Stdio::null())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .status()?;
+    assert!(super_status.success());
+
+    let ssh_status = Command::new("service")
         .arg("ssh")
         .arg("start")
         .stdin(Stdio::null())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .status()?;
-    assert!(status.success());
+    assert!(ssh_status.success());
 
     let mut last_activity = Instant::now();
 

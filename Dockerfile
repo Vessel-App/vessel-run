@@ -60,11 +60,11 @@ RUN set -eux; \
         echo $TZ > /etc/timezone; \
 	    apt update; \
 		apt install --yes --no-install-recommends \
-			locales gnupg gosu curl wget zip unzip sqlite3 libtool automake rsync \
+			locales gnupg gosu zip unzip sqlite3 libtool automake rsync \
             bind9-dnsutils iputils-ping iproute2 ca-certificates htop \
 			curl wget ca-certificates git-core \
 			openssh-server openssh-client \
-			sudo less \
+			sudo less vim \
             software-properties-common \
 			nginx supervisor; \
         gosu nobody true; \
@@ -121,6 +121,26 @@ RUN echo "Set disable_coredump false" >> /etc/sudo.conf \
     && php -r "readfile('http://getcomposer.org/installer');" | php8.1 -- --install-dir=/usr/bin/ --filename=composer1 --1 \
     && mkdir /run/php \
     && phpdismod -v ALL -s cli xdebug pcov \
+    && sed -i 's/^user =.*$/user = vessel/g' /etc/php/7.4/fpm/pool.d/www.conf \
+    && sed -i 's/^group =.*$/group = vessel/g' /etc/php/7.4/fpm/pool.d/www.conf \
+    && sed -i 's/^;clear_env =.*$/clear_env = no/g' /etc/php/7.4/fpm/pool.d/www.conf \
+    && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/7.4/fpm/php.ini \
+    && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/7.4/cli/php.ini \
+    \
+    && sed -i 's/^user =.*$/user = vessel/g' /etc/php/8.0/fpm/pool.d/www.conf \
+    && sed -i 's/^group =.*$/group = vessel/g' /etc/php/8.0/fpm/pool.d/www.conf \
+    && sed -i 's/^;clear_env =.*$/clear_env = no/g' /etc/php/8.0/fpm/pool.d/www.conf \
+    && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.0/fpm/php.ini \
+    && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.0/cli/php.ini \
+    \
+    && sed -i 's/^user =.*$/user = vessel/g' /etc/php/8.1/fpm/pool.d/www.conf \
+    && sed -i 's/^group =.*$/group = vessel/g' /etc/php/8.1/fpm/pool.d/www.conf \
+    && sed -i 's/^;clear_env =.*$/clear_env = no/g' /etc/php/8.1/fpm/pool.d/www.conf \
+    && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.1/fpm/php.ini \
+    && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.1/cli/php.ini \
+    \
+    && sed -i 's/^user =.*$/user = vessel;/g' /etc/nginx/nginx.conf \
+    \
     && curl -o- https://raw.githubusercontent.com/creationix/nvm/$NVM_VERSION/install.sh | bash \
     && bash -c 'source $HOME/.nvm/nvm.sh \
         && nvm install --latest-npm 14 \
@@ -136,8 +156,7 @@ RUN echo "Set disable_coredump false" >> /etc/sudo.conf \
 
 USER vessel
 
-# Don't forget to change that if you don't want to give /me/ access to your
-# remote dev env! Otherwise I'll ssh in there and fix your code 😈
+
 # TODO: PUBLIC KEY TO ADD TO AUTHORIZED KEYS
 RUN set -eux; \
 		mkdir ~/.ssh; \
@@ -147,8 +166,13 @@ WORKDIR /app
 
 COPY --from=builder /app/vessel-run ./vessel-run
 
-# Because our top-level process starts the ssh daemon itself, for simplicity,
-# let's run it as root. It could drop privileges after that but we already have
-# passwordless sudo set up on the machine so double-shrug.
 USER root
-CMD ["./vessel-run"]
+
+COPY docker/entrypoint /app/entrypoint
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
+
+RUN chmod +x /app/entrypoint
+
+ENTRYPOINT /app/entrypoint
+CMD ["/app/vessel-run"]
