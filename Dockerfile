@@ -139,22 +139,21 @@ RUN echo "Set disable_coredump false" >> /etc/sudo.conf \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.1/fpm/php.ini \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.1/cli/php.ini \
     \
-    && sed -i 's/^user =.*$/user = vessel;/g' /etc/nginx/nginx.conf \
-    \
-    && curl -o- https://raw.githubusercontent.com/creationix/nvm/$NVM_VERSION/install.sh | bash \
+    && sed -i 's/^user =.*$/user = vessel;/g' /etc/nginx/nginx.conf
+
+
+USER vessel
+WORKDIR /home/vessel
+
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/$NVM_VERSION/install.sh | bash \
     && bash -c 'source $HOME/.nvm/nvm.sh \
         && nvm install --latest-npm 14 \
         && nvm install --latest-npm 16 \
         && nvm alias default 14 \
         && nvm use default \
         && nvm install-latest-npm \
-        && curl -o- -L https://yarnpkg.com/install.sh | bash' \
-    && apt clean autoclean \
-	&& apt autoremove --yes \
-	&& rm -rf /var/lib/{apt,dpkg,cache,log}/
+        && curl -o- -L https://yarnpkg.com/install.sh | bash'
 
-
-USER vessel
 
 
 # TODO: PUBLIC KEY TO ADD TO AUTHORIZED KEYS
@@ -172,7 +171,10 @@ COPY docker/entrypoint /app/entrypoint
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 COPY docker/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
-RUN chmod +x /app/entrypoint
+RUN chmod +x /app/entrypoint \
+    && apt-get clean autoclean \
+	&& apt-get autoremove --yes \
+	&& rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 ENTRYPOINT /app/entrypoint
 CMD ["/app/vessel-run"]
