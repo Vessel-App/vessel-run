@@ -123,23 +123,29 @@ RUN echo "Set disable_coredump false" >> /etc/sudo.conf \
     && phpdismod -v ALL -s cli xdebug pcov \
     && sed -i 's/^user =.*$/user = vessel/g' /etc/php/7.4/fpm/pool.d/www.conf \
     && sed -i 's/^group =.*$/group = vessel/g' /etc/php/7.4/fpm/pool.d/www.conf \
+    && sed -i 's/^listen.owner =.*$/listen.owner = vessel/g' /etc/php/7.4/fpm/pool.d/www.conf \
+    && sed -i 's/^listen.group =.*$/listen.group = vessel/g' /etc/php/7.4/fpm/pool.d/www.conf \
     && sed -i 's/^;clear_env =.*$/clear_env = no/g' /etc/php/7.4/fpm/pool.d/www.conf \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/7.4/fpm/php.ini \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/7.4/cli/php.ini \
     \
     && sed -i 's/^user =.*$/user = vessel/g' /etc/php/8.0/fpm/pool.d/www.conf \
     && sed -i 's/^group =.*$/group = vessel/g' /etc/php/8.0/fpm/pool.d/www.conf \
+    && sed -i 's/^listen.owner =.*$/listen.owner = vessel/g' /etc/php/8.0/fpm/pool.d/www.conf \
+    && sed -i 's/^listen.group =.*$/listen.group = vessel/g' /etc/php/8.0/fpm/pool.d/www.conf \
     && sed -i 's/^;clear_env =.*$/clear_env = no/g' /etc/php/8.0/fpm/pool.d/www.conf \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.0/fpm/php.ini \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.0/cli/php.ini \
     \
     && sed -i 's/^user =.*$/user = vessel/g' /etc/php/8.1/fpm/pool.d/www.conf \
     && sed -i 's/^group =.*$/group = vessel/g' /etc/php/8.1/fpm/pool.d/www.conf \
+    && sed -i 's/^listen.owner =.*$/listen.owner = vessel/g' /etc/php/8.1/fpm/pool.d/www.conf \
+    && sed -i 's/^listen.group =.*$/listen.group = vessel/g' /etc/php/8.1/fpm/pool.d/www.conf \
     && sed -i 's/^;clear_env =.*$/clear_env = no/g' /etc/php/8.1/fpm/pool.d/www.conf \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.1/fpm/php.ini \
     && sed -i 's/^display_errors = .*/display_errors = On/g' /etc/php/8.1/cli/php.ini \
     \
-    && sed -i 's/^user =.*$/user = vessel;/g' /etc/nginx/nginx.conf
+    && sed -i 's/^user.*$/user vessel;/g' /etc/nginx/nginx.conf
 
 
 USER vessel
