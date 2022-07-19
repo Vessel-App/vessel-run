@@ -1,39 +1,39 @@
-# How To Rust
+# Vessel Run
+
+This repository contains the Docker image used for PHP remote development.
+
+The parts of this are:
+
+1. A Rust project, based on [this article from Amos](https://fasterthanli.me/articles/remote-development-with-rust-on-fly-io)
+2. Dockerfile that uses the Rust program as it's main program
+    - It starts SSH 
+    - It starts Supervisor (which in turn runs nginx/php-fpm)
+    - It listens to the network for SSH connections and shuts down the VM after a period of inactivity
+
+## Building and Deploying
+
+The resulting Docker image used in this project should be uploaded to Fly's registry.
+
+[This article](https://til.simonwillison.net/fly/fly-docker-registry) has notes on using Fly's registry.
+
+The steps look like this:
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# Auth against Fly's registry
+# This upserts file ~/.docker/config.json (possibly differing on Linux vs Mac)
+fly auth docker
 
-# ~/.rustup (metadata/toolchain) or $RUSTUP_HOME
-# ~/.cargo (packages) or $CARGO_HOME
-# Commands: cargo, rustc, rustup (and more?) at ~/.cargo/bin
+# Build a docker image to push
+docker build -t registry.fly.io/vessel-run:latest .
 
-# You can uninstall at any time with rustup self uninstall
+# Push the image to Fly's registry
+docker push registry.fly.io/vessel-run:latest
 ```
 
-Notes:
+The problem is that the image name needs to correspond to an existing app within your account.
 
-* build your project with `cargo build`
-* run your project with `cargo run`
-* test your project with `cargo test`
-* build documentation for your project with `cargo doc`
-* publish a library to [crates.io](https://crates.io/) with `cargo publish`
+So, we need to:
 
-```bash
-cargo --version
-```
-
-## New Project
-
-```bash
-cd ~/Code/Fideloper/vessel
-
-cargo new vessel-run
-
-cd vessel-run
-
-# Run the hello world app
-cargo run
-```
-
-Notes on implementation: https://fasterthanli.me/articles/remote-development-with-rust-on-fly-io#enter-fly-io-machines
-
+1. Create an app for each team in Vessel
+2. Push a copy of the image to the repo for that app
+3. When machines in that app are created and run, they can pull that image to start it
