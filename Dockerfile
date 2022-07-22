@@ -160,13 +160,6 @@ RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/$NVM_VERSION/insta
         && nvm install-latest-npm \
         && curl -o- -L https://yarnpkg.com/install.sh | bash'
 
-
-
-# TODO: PUBLIC KEY TO ADD TO AUTHORIZED KEYS
-RUN set -eux; \
-		mkdir ~/.ssh; \
-		echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDZ8kvjDs3ipCEj8Om2/7kcjg2kprTklhuE5Pg6Vc3oAwK/u4bvcxnChDelGwUGOExn9l1dK2yymyLB7nIhwtJhgxOHzKTiUckBhp0wbHEVE9yxaxknWSoHepz5F+Im/4ZIaA7fInaA/nt/trpOVJzPKWjV1oDZ/mrEjN5u97VTnS5Sy6b1M7uCbr8/KET6Ld0hci7IgL+zyVwRU/QrCT753ABRLrKxb0Je2Svd7asjCk1iR0m/c0TaJUmIqbQqxdRGmnrOQjqy1nRFOpQj+vj4KP7nCx1raMLcvK33c1K39fNbvodhSvasuz1G9/x3vzBO8kezStCqpalFhLawU/5iuz7ZPugVyuo9sSPQOqTpyWphLwaHMOVGM/LruLQkVZpC6UmTDGAQh3cAPyYYAu1n5kw8shf1If7aDJYnHRWqtMu3F2IpxbU/NnACprDevaP/Gvfep6sk7ZjYt13Cxpiqm5KMCfX+Oqd3he4P4MqYIQC8n7pw5w6ZLeYcSg/Lg4kkymLZaa6ZedzwUIgUVv0xfk+N/YwVXyqnYYtAjvbNIEs9qZUn78t5xAcwZuWE57kX1HB9KU6KnBLwxk44x2HxOEkdbi39c9BU6UWxbM8q9tQ5qn5dSj0dotTqGBJzqyqAhnzqDNJqbidwUn3CX2nGOqHXhZDbmZXOjS6p8Euhjw== fideloper@" | tee -a ~/.ssh/authorized_keys
-
 WORKDIR /app
 
 COPY --from=builder /app/vessel-run ./vessel-run

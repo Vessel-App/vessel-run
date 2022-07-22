@@ -3,6 +3,12 @@
 # TODO: Sniff out and change PHP-FPM version in Nginx, Supervisord conf
 # TODO: Install/set node version
 
+if [[ ! -z "$VESSEL_PUBLIC_KEY" ]]; then
+    mkdir -p /home/vessel/.ssh
+    echo "$VESSEL_PUBLIC_KEY" > /home/vessel/.ssh/authorized_keys
+    chown -R vessel:vessel /home/vessel/.ssh
+fi
+
 if [ $# -gt 0 ];then
     # If we passed a command, run it as current user
     exec gosu vessel "$@"
