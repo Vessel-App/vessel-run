@@ -12,28 +12,10 @@ The parts of this are:
 
 ## Building and Deploying
 
-The resulting Docker image used in this project should be uploaded to Fly's registry.
+This needs to be built on an AMD64 linux machine. Cross-compilation bugs) result in build failures related to Rust.
 
-[This article](https://til.simonwillison.net/fly/fly-docker-registry) has notes on using Fly's registry.
-
-The steps look like this:
+The resulting Docker image exists in Docker Hub and is used as the image run on Fly.io's infrastructure.
 
 ```bash
-# Auth against Fly's registry
-# This upserts file ~/.docker/config.json (possibly differing on Linux vs Mac)
-fly auth docker
-
-# Build a docker image to push
-docker build -t registry.fly.io/vessel-run:latest .
-
-# Push the image to Fly's registry
-docker push registry.fly.io/vessel-run:latest
+docker build -t vesselapp/php:8.1 .
 ```
-
-The problem is that the image name needs to correspond to an existing app within your account.
-
-So, we need to:
-
-1. Create an app for each team in Vessel
-2. Push a copy of the image to the repo for that app
-3. When machines in that app are created and run, they can pull that image to start it
