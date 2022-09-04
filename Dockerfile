@@ -86,7 +86,7 @@ RUN set -eux; \
 		echo "ClientAliveCountMax 10" >> /etc/ssh/sshd_config;
 
 
-COPY --from=builder /app/vessel-run ./vessel-run
+COPY --from=builder /app/vessel-run /app/vessel-run
 COPY docker/entrypoint /app/entrypoint
 
 RUN chmod +x /app/entrypoint; \

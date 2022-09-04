@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: Sniff out and change PHP-FPM version in Nginx, Supervisord conf
-# TODO: Install/set node version
-
 if [[ ! -z "$VESSEL_PUBLIC_KEY" ]]; then
     mkdir -p /home/vessel/.ssh
     echo "$VESSEL_PUBLIC_KEY" > /home/vessel/.ssh/authorized_keys

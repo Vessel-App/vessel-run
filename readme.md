@@ -18,5 +18,5 @@ The resulting Docker image exists in Docker Hub and is used as the image run on 
 
 ```bash
 # Assuming run on Intel-based CPU
-docker build -t vesselapp/php:8.1 .
+docker build -t vesselapp/base:latest .
 ```
