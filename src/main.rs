@@ -9,6 +9,15 @@ use procfs::net::TcpState;
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
+    let ssh_status = Command::new("service")
+        .arg("ssh")
+        .arg("start")
+        .stdin(Stdio::null())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .status()?;
+    assert!(ssh_status.success());
+    
     let super_status = Command::new("service")
         .arg("supervisor")
         .arg("start")
@@ -18,15 +27,6 @@ fn main() -> color_eyre::Result<()> {
         .status()?;
     assert!(super_status.success());
 
-    let ssh_status = Command::new("service")
-        .arg("ssh")
-        .arg("start")
-        .stdin(Stdio::null())
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .status()?;
-    assert!(ssh_status.success());
-
     let mut last_activity = Instant::now();
 
     loop {
@@ -35,7 +35,7 @@ fn main() -> color_eyre::Result<()> {
         } else {
             let idle_time = last_activity.elapsed();
             println!("Idle for {idle_time:?}");
-            if idle_time > Duration::from_secs(60) {
+            if idle_time > Duration::from_secs(300) {
                 println!("Stopping machine. Goodbye!");
                 std::process::exit(0)
             }
