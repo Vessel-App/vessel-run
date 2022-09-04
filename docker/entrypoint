@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-if [[ ! -z "$VESSEL_PUBLIC_KEY" ]]; then
+echo "we will start things"
+
+if [ ! -z "$VESSEL_PUBLIC_KEY" ]; then
     mkdir -p /home/vessel/.ssh
     echo "$VESSEL_PUBLIC_KEY" > /home/vessel/.ssh/authorized_keys
     chown -R vessel:vessel /home/vessel/.ssh
 fi
 
-if [ $# -gt 0 ];then
+echo $#
+
+if [ $# -gt 0 ]; then
     # If we passed a command, run it as current user
     exec gosu vessel "$@"
 else

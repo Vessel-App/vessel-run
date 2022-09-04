@@ -51,6 +51,8 @@ RUN --mount=type=cache,target=/app/target \
 ################################################################################
 FROM ubuntu:20.04
 
+SHELL ["/bin/bash", "-c"]
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=UTC
 
@@ -94,6 +96,6 @@ RUN chmod +x /app/entrypoint; \
 	apt-get autoremove --yes; \
 	rm -rf /var/lib/{apt,dpkg,cache,log}/;
 
-ENTRYPOINT /app/entrypoint
+ENTRYPOINT ["/app/entrypoint"]
 
 CMD ["/app/vessel-run"]
