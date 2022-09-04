@@ -51,8 +51,6 @@ RUN --mount=type=cache,target=/app/target \
 ################################################################################
 FROM ubuntu:20.04
 
-SHELL ["/bin/bash", "-c"]
-
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=UTC
 
@@ -91,11 +89,6 @@ RUN set -eux; \
 COPY --from=builder /app/vessel-run /app/vessel-run
 COPY docker/entrypoint /app/entrypoint
 
-RUN chmod +x /app/entrypoint; \
-    apt-get clean autoclean; \
-	apt-get autoremove --yes; \
-	rm -rf /var/lib/{apt,dpkg,cache,log}/;
+RUN chmod +x /app/entrypoint
 
 ENTRYPOINT ["/app/entrypoint"]
-
-CMD ["/app/vessel-run"]
