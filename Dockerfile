@@ -5,6 +5,8 @@
 # any libc version problems
 FROM ubuntu:20.04 AS builder
 
+LABEL fly_launch_runtime="vessel"
+
 # Install base utils: curl to grab rustup, gcc + build-essential for linking.
 # we could probably reduce that a bit but /shrug
 RUN set -eux; \
