@@ -76,7 +76,9 @@ RUN set -eux; \
         mkdir -p /app; \
 		useradd -ms /usr/bin/bash vessel; \
 		usermod -aG sudo vessel; \
-		echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers;
+		echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers; \
+		echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf; \
+		sysctl -p;
 
 # Note that we're listening on port 2222
 RUN set -eux; \
